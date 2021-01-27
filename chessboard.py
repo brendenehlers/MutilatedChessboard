@@ -16,14 +16,6 @@ def mutilated_chessboard(x_size=8, y_size=8):
         x_rand, y_rand = random.randrange(x_size), random.randrange(y_size)
     arr[x_rand][y_rand] = -1
 
-    # red = True
-    # for x in range(len(arr)):
-    #     for y in range(len(arr[x])):
-    #         if arr[x][y] == -1:
-    #             print(f"{arr[x][y]}: {'red' if red else 'blue'}")
-    #         red = not red
-    #     red = not red
-
     # check if the problem is solvable
     # raise exception if it isn't solvable
     if not check_solvable(arr):
@@ -34,7 +26,8 @@ def mutilated_chessboard(x_size=8, y_size=8):
     x_i, y_i = 0, 0
     transposed = False
     num_holes = 0
-
+    
+    # determine if the array needs to be transposed
     for x in range(x_i, len(arr[y_i])):
         if arr[y_i][x] == -1:
             num_holes += 1
@@ -52,6 +45,7 @@ def mutilated_chessboard(x_size=8, y_size=8):
     # starting row
     start = True
     direction = True # True: start right; False: start down
+    
     for x in range(0, len(arr[y_i])):
         if arr[y_i][x] == -1:
             x += 1
@@ -62,6 +56,7 @@ def mutilated_chessboard(x_size=8, y_size=8):
             start = not start
 
     # middle rows
+    # back and forth through the middle section of the array
     forward = False
 
     for y in range(1, len(arr)-1):
@@ -111,7 +106,8 @@ def mutilated_chessboard(x_size=8, y_size=8):
         else:
             arr[y][0] = 1 if start else 2
             start = not start
-
+            
+    # flip array back to its original state
     if transposed:
         np.transpose(arr)
 
@@ -135,11 +131,8 @@ def check_solvable(arr):
                     num_blue += 1
             red = not red
         red = not red
-    # print(f"num_red: {num_red}\num_blue: {num_blue}")
     return num_red == num_blue
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     arr = (mutilated_chessboard(8, 8))
-
     print(arr)
