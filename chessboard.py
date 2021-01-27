@@ -16,13 +16,13 @@ def mutilated_chessboard(x_size=8, y_size=8):
         x_rand, y_rand = random.randrange(x_size), random.randrange(y_size)
     arr[x_rand][y_rand] = -1
 
-    red = True
-    for x in range(len(arr)):
-        for y in range(len(arr[x])):
-            if arr[x][y] == -1:
-                print(f"{arr[x][y]}: {'red' if red else 'blue'}")
-            red = not red
-        red = not red
+    # red = True
+    # for x in range(len(arr)):
+    #     for y in range(len(arr[x])):
+    #         if arr[x][y] == -1:
+    #             print(f"{arr[x][y]}: {'red' if red else 'blue'}")
+    #         red = not red
+    #     red = not red
 
     # check if the problem is solvable
     # raise exception if it isn't solvable
@@ -51,9 +51,12 @@ def mutilated_chessboard(x_size=8, y_size=8):
 
     # starting row
     start = True
+    direction = True # True: start right; False: start down
     for x in range(0, len(arr[y_i])):
         if arr[y_i][x] == -1:
             x += 1
+            if (not start) and direction:
+                direction = not direction
         else:
             arr[y_i][x] = 1 if start else 2
             start = not start
@@ -65,6 +68,9 @@ def mutilated_chessboard(x_size=8, y_size=8):
         if not forward:
             for x in range(len(arr[y])-1, 0, -1):
                 if arr[y][x] == -1:
+                    if (not start) and direction:
+                        direction = not direction
+
                     if x - 1 >= 1:
                         x -= 1
                     else:
@@ -75,6 +81,8 @@ def mutilated_chessboard(x_size=8, y_size=8):
         else:
             for x in range(1, len(arr[y])):
                 if arr[y][x] == -1:
+                    if (not start) and direction:
+                        direction = not direction
                     if x+1 <= len(arr[y]):
                         x += 1
                     else:
@@ -86,6 +94,8 @@ def mutilated_chessboard(x_size=8, y_size=8):
 
     # final row
     for x in range(x_size-1, 0, -1):
+        if (not start) and direction:
+            direction = not direction
         if arr[y_size-1][x] == -1:
             x -= 1
         else:
@@ -94,6 +104,8 @@ def mutilated_chessboard(x_size=8, y_size=8):
 
     # final column
     for y in range(y_size-1, 0, -1):
+        if (not start) and direction:
+            direction = not direction
         if arr[y][0] == -1:
             y -= 1
         else:
@@ -103,7 +115,11 @@ def mutilated_chessboard(x_size=8, y_size=8):
     if transposed:
         np.transpose(arr)
 
-    return arr
+    right = "right"
+    down = "down"
+    print(f"start {right if direction else down}")
+
+    return arr, direction
 
 # returns true if the array provided is solvable, otherwise returns false
 def check_solvable(arr):
@@ -125,4 +141,5 @@ def check_solvable(arr):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     arr = (mutilated_chessboard(8, 8))
+
     print(arr)
